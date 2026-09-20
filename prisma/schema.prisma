@@ -1,0 +1,140 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  name           String
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id])
+  price          Float
+  comparePrice   Float?
+  stock          Int         @default(50)
+  image          String
+  description    String
+  featured       Boolean     @default(false)
+  active         Boolean     @default(true)
+  rating         Float       @default(5.0)
+  badge          String?
+  allowedFlavors String?     // Comma-separated flavor IDs or names
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+}
+
+model Category {
+  id        String    @id
+  slug      String    @unique
+  name      String
+  icon      String?
+  image     String?
+  order     Int       @default(0)
+  active    Boolean   @default(true)
+  products  Product[]
+}
+
+model Flavor {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String   @default("Bonbon")
+  description String?
+  intensity   String?  // Suave, Medio, Intenso
+  sweetness   String?  // Bajo, Equilibrado, Dulce
+  active      Boolean  @default(true)
+  isNew       Boolean  @default(false)
+  colorCode   String?
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  customerName    String?
+  customerPhone   String?
+  customerAddress String?
+  deliveryType    String      @default("pickup") // pickup, delivery
+  paymentMethod   String      @default("whatsapp") // whatsapp, transfer, card
+  status          String      @default("Nuevo") // Nuevo, Confirmado, Preparando, Listo, Entregado, Cancelado
+  subtotal        Float
+  discount        Float       @default(0)
+  total           Float
+  notes           String?
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  productName String
+  image       String?
+  price       Float
+  quantity    Int
+  flavor      String?
+  boxFlavors  String?  // JSON string or comma-separated flavors for boxes
+}
+
+model Promotion {
+  id         String   @id @default(cuid())
+  title      String
+  kicker     String?
+  subtitle   String?
+  buttonText String   @default("Pedir ahora")
+  buttonLink String   @default("#productos")
+  image      String
+  isDark     Boolean  @default(true)
+  active     Boolean  @default(true)
+  order      Int      @default(0)
+}
+
+model Coupon {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  discountPercent Float?
+  discountAmount  Float?
+  minPurchase     Float     @default(0)
+  active          Boolean   @default(true)
+  expiresAt       DateTime?
+}
+
+model StoreContent {
+  id                 String   @id @default("singleton")
+  heroKicker         String   @default("KOUKOU · CHOCOLATERÍA")
+  heroTitle          String   @default("Momentos chidos con una mordida.")
+  heroDescription    String   @default("Chocolate, café y repostería creados para convertir cualquier momento en algo especial.")
+  heroImage          String   @default("https://images.unsplash.com/photo-1575377427642-087cf684f29d?auto=format&fit=crop&w=1800&q=85")
+  featureKicker      String   @default("ESPECIALIDAD KOUKOU")
+  featureTitle       String   @default("Chocolate con personalidad.")
+  featureDescription String   @default("Nuestros bonbons son el corazón de KOUKOU: pequeños chocolates rellenos creados para sorprender desde el primer mordisco.")
+  featureImage       String   @default("https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=1200&q=85")
+  bannerKicker       String   @default("KOUKOU MOMENTS")
+  bannerTitle        String   @default("Un chocolate. Un momento.")
+  bannerDescription  String   @default("Regala, comparte o simplemente date el gusto.")
+  bannerImage        String   @default("https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1600&q=85")
+  updatedAt          DateTime @updatedAt
+}
+
+model StoreSettings {
+  id               String   @id @default("singleton")
+  storeName        String   @default("KOUKOU Chocolatería")
+  whatsappPhone    String   @default("528440000000")
+  location         String   @default("Saltillo, Coahuila, México")
+  schedule         String   @default("Lunes a Domingo: 10:00 - 21:00")
+  instagram        String   @default("@koukou.chocolates")
+  facebook         String   @default("KOUKOU Chocolatería")
+  tiktok           String   @default("@koukouchocolate")
+  currency         String   @default("MXN")
+  seoTitle         String   @default("KOUKOU | Chocolatería de Alta Gama & Bonbons")
+  seoDescription   String   @default("Chocolates finos, bonbons artesanales rellenos, alfajores y café de especialidad en Saltillo.")
+  updatedAt        DateTime @updatedAt
+}

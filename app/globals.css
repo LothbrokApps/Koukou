@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black: #090909;
+  --dark: #14110f;
+  --brown: #351b12;
+  --cream: #f7f1e8;
+  --cream-light: #fbf9f6;
+  --white: #ffffff;
+  --gold: #c99535;
+  --gold2: #e5b95c;
+  --gold-muted: #d9b76a;
+  --gray: #777777;
+  --border: #e8e1d7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #ffffff;
+  color: #111111;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1ede8;
+}
+::-webkit-scrollbar-thumb {
+  background: #c99535;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a97b28;
+}
+
+/* Gold Gradient Text */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #c99535 0%, #e5b95c 50%, #b27a20 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Button & Link micro-interactions */
+.btn-gold {
+  background-color: #c99535;
+  color: #111111;
+  font-weight: 700;
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+}
+
+.btn-gold:hover {
+  background-color: #ffffff;
+  color: #090909;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(201, 149, 53, 0.3);
+}
+
+.btn-dark {
+  background-color: #090909;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.btn-dark:hover {
+  background-color: #c99535;
+  color: #090909;
+  transform: translateY(-2px);
+}
+
+/* Smooth modal animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-animate {
+  animation: fadeIn 0.22s ease-out forwards;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.whatsapp-pulse {
+  animation: pulseGlow 2s infinite;
+}
